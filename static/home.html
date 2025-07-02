@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEST WEBSERVER C - Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav {
+            background-color: #555;
+            padding: 0.5rem;
+        }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        nav li {
+            display: inline;
+            margin-right: 20px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Test Web Server</h1>
+        <p>Built with C Programming Language</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h2>About This Server</h2>
+            <p>This is a custom web server implementation written in C. It demonstrates the fundamentals of HTTP protocol handling, socket programming, and web content delivery.</p>
+            <ul>
+                <li>Custom HTTP request parsing</li>
+                <li>Static file serving</li>
+                <li>Multi-threaded request handling</li>
+                <li>MIME type detection</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Features</h2>
+            <table border="1" style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <th>Feature</th>
+                    <th>Status</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>HTTP/1.1 Support</td>
+                    <td>✅ Active</td>
+                    <td>Full HTTP/1.1 protocol implementation</td>
+                </tr>
+                <tr>
+                    <td>Static Files</td>
+                    <td>✅ Active</td>
+                    <td>HTML, CSS, JS, Images</td>
+                </tr>
+                <tr>
+                    <td>Dynamic Content</td>
+                    <td>🔄 In Progress</td>
+                    <td>CGI and custom handlers</td>
+                </tr>
+                <tr>
+                    <td>SSL/TLS</td>
+                    <td>⏳ Planned</td>
+                    <td>Secure connections</td>
+                </tr>
+            </table>
+        </div>
+        <div class="card">
+            <h2>Server Statistics</h2>
+            <div style="display: flex; justify-content: space-around;">
+                <div>
+                    <h3>Requests Served</h3>
+                    <p style="font-size: 2em; color: #007acc;">1,247</p>
+                </div>
+                <div>
+                    <h3>Uptime</h3>
+                    <p style="font-size: 2em; color: #28a745;">72 hours</p>
+                </div>
+                <div>
+                    <h3>Data Transferred</h3>
+                    <p style="font-size: 2em; color: #ffc107;">15.7 MB</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Sample Form</h2>
+            <form action="/submit" method="post">
+                <label for="name">Name:</label><br>
+                <input type="text" id="name" name="name" style="width: 100%; padding: 8px; margin: 8px 0;"><br>
+                
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email" style="width: 100%; padding: 8px; margin: 8px 0;"><br>
+                
+                <label for="message">Message:</label><br>
+                <textarea id="message" name="message" rows="4" style="width: 100%; padding: 8px; margin: 8px 0;"></textarea><br>
+                
+                <input type="submit" value="Submit" style="background: #007acc; color: white; padding: 10px 20px; border: none; cursor: pointer;">
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Code Example</h2>
+            <pre style="background: #f8f8f8; padding: 15px; overflow-x: auto;">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/socket.h&gt;
+
+int main() {
+    int server_fd, new_socket;
+    struct sockaddr_in address;
+    
+    // Create socket
+    server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    
+    // Bind and listen
+    bind(server_fd, (struct sockaddr *)&address, sizeof(address));
+    listen(server_fd, 3);
+    
+    printf("Server running on port 8080\n");
+    return 0;
+}
+            </pre>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Test Web Server. Built with C Programming Language.</p>
+    </footer>
+
+    <script>
+        console.log("Test Web Server loaded successfully!");
+        
+        // Simple interaction
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.transition = 'transform 0.3s ease';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
