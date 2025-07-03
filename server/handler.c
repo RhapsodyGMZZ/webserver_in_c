@@ -1,43 +1,63 @@
 #include "../header.h"
 
-void handle_routes_get(char* path, int socket_fd) {
+void handle_routes_get(char *path, int socket_fd)
+{
     printf("%s\n", path);
-    char* req = NULL;
+    char *req = NULL;
     int should_free = 0;
 
     // Handling GET path here
-    if (strcmp(path, "/home") == 0) {
+    if (strcmp(path, "/home") == 0)
+    {
         req = render("home.html");
-    } else if (strcmp(path, "/about") == 0) {
+    }
+    else if (strcmp(path, "/about") == 0)
+    {
         should_free = 0;
-    } else {
-        req = "HTTP/1.1 404 Not Found\r\n";
+    }
+    else
+    {
+        req = "HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\nContent-Length: 9\r\n\r\nNot Found";
         should_free = 1;
     }
     send(socket_fd, req, strlen(req), 0);
     printf("\nsent !\n");
-    
+
     if (should_free == 0)
         free(req);
 }
 
-void handle_routes_post(char* path, int socket_fd, char* buffer) {
-    printf("%s\n%s\n", path, buffer);
-    char* req = NULL;
-    int should_free = 0;
-    char* body = strtok(buffer, "\r\n\r\n");
-    body = strtok(NULL, "\r\n\r\n");
-    printf("%s",body);
+void handle_routes_post(char *path, int socket_fd, char *buffer)
+{
+    char *req = NULL;
+    int should_free = 1;
+    char *body = strstr(buffer, "\r\n\r\n");
+
     // Handling POST path here
-    if (strcmp(path, "/submit") == 0) {
-        req = render("home.html");
-    } else {
-        req = "HTTP/1.1 404 Not Found\r\n";
-        should_free = 1;
+    if (strcmp(path, "/submit") == 0)
+    {
+        if (body && strlen(body) > 4)
+        {
+            body += 4; // skip the "\r\n\r\n"
+            printf("BODY == '%s'", body);
+            req = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 7\r\n\r\nSuccess";
+            should_free = 0;
+        }
+        else
+        {
+            req = "HTTP/1.1 400 Bad Request\r\nContent-Type: text/plain\r\nContent-Length: 11\r\n\r\nBad Request";
+            should_free = 0;
+        }
     }
+    else
+    {
+        req = "HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\nContent-Length: 9\r\n\r\nNot Found";
+        should_free = 0;
+    }
+
     send(socket_fd, req, strlen(req), 0);
     printf("\nsent !\n");
-    
-    if (should_free == 0)
+
+    if (should_free == 1)
         free(req);
 }

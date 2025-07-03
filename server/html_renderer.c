@@ -28,8 +28,9 @@ char* render(char* filename) {
         fclose(file);
         exit(EXIT_FAILURE);
     }
-
-    strcpy(buffer, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n");
+    char* tmp = malloc(TMP_MAX);
+    sprintf(tmp,"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n Content-Length: %ld\r\n\r\n", file_size + TMP_MAX);
+    strcpy(buffer, tmp);
     size_t header_len = strlen(buffer);
 
     if (file != NULL) {
@@ -37,7 +38,8 @@ char* render(char* filename) {
         buffer[header_len + file_size] = '\0';
         fclose(file);
     } else {
-        printf("test");
+        printf("failed to fseek %s\n", filename);
+        exit(EXIT_FAILURE); // TODO ERROR 500
     }
     return buffer;
 }

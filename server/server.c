@@ -7,7 +7,7 @@ int listener(int new_socket, int server_fd, struct sockaddr_in address, socklen_
         char buffer[1024] = {0};
         char *req = {0};
         if ((new_socket = accept(server_fd, (struct sockaddr *)&address,
-        &addrlen)) < 0)
+                                 &addrlen)) < 0)
         {
             perror("accept");
             return -1;
@@ -18,18 +18,24 @@ int listener(int new_socket, int server_fd, struct sockaddr_in address, socklen_
             if (strncmp(buffer, "GET ", 4) == 0)
             {
                 printf("GET\t");
-                
+
                 char *path = NULL;
                 path = strtok(buffer, " "); // returns the string "GET"
                 path = strtok(NULL, " ");   // returns the requested path
                 handle_routes_get(path, new_socket);
-            } else if (strncmp(buffer, "POST ", 5) == 0) {
+            }
+            else if (strncmp(buffer, "POST ", 5) == 0)
+            {
                 printf("POST\t");
+                char * tmp = malloc(strlen(buffer));
+                strcpy(tmp, buffer);
                 char *path = NULL;
-                path = strtok(buffer, " "); //TODO fix strtok which modifies buffer directly 
+                path = strtok(tmp, " ");
                 path = strtok(NULL, " ");
                 handle_routes_post(path, new_socket, buffer);
-            } else {
+            }
+            else
+            {
                 req = "HTTP/1.1 405 Method Not Allowed\r\n";
                 send(new_socket, req, sizeof req, 0);
             }
