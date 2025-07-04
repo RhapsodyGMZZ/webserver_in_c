@@ -21,6 +21,8 @@ void handle_routes_get(char* path, int socket_fd);
 void handle_routes_post(char* path, int socket_fd, char* buffer);
 char* render(char* filename);
 
-
-
+//Utils functions
+char* http_response(int status, char* content_type, char* body);
+test_form* parse_form(char* body);
+void free_form(test_form* form);
 

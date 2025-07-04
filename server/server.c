@@ -36,8 +36,9 @@ int listener(int new_socket, int server_fd, struct sockaddr_in address, socklen_
             }
             else
             {
-                req = "HTTP/1.1 405 Method Not Allowed\r\n";
+                req = http_response(405, "text/plain", "Methods Allowed : [GET, POST]");
                 send(new_socket, req, sizeof req, 0);
+                free(req);
             }
             close(new_socket);
         }

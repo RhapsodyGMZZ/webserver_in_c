@@ -1,14 +1,21 @@
 #include "../header.h"
 
 char* render(char* filename) {
-    char dirname[FILENAME_MAX] = "./static/";
+    char dirname[FILENAME_MAX];
+    strcpy(dirname, "./static/");
+    strcat(dirname, filename);
 
-    FILE* file = fopen(strcat(dirname, filename), "r");
-    
+    FILE* file = fopen(dirname, "r");
+
+    if (file == NULL) {
+        printf("failed to open %s\n", filename);
+        return http_response(500, "text/plain", "An error has occurred.");
+    }
+
     if (fseek(file, 0, SEEK_END) == -1)
     {
         printf("failed to fseek %s\n", filename);
-        exit(EXIT_FAILURE);
+        return http_response(500, "text/plain", "An error has occurred.");
     }
 
     long file_size = ftell(file);
@@ -16,7 +23,7 @@ char* render(char* filename) {
     if (file_size == -1)
     {
         printf("failed to ftell %s\n", filename);
-        exit(EXIT_FAILURE);
+        return http_response(500, "text/plain", "An error has occurred.");
     }
 
     fseek(file, 0, SEEK_SET);
@@ -26,20 +33,16 @@ char* render(char* filename) {
     if (buffer == NULL) {
         printf("failed to allocate memory\n");
         fclose(file);
-        exit(EXIT_FAILURE);
+        return http_response(500, "text/plain", "An error has occurred.");
     }
-    char* tmp = malloc(TMP_MAX);
-    sprintf(tmp,"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n Content-Length: %ld\r\n\r\n", file_size + TMP_MAX);
-    strcpy(buffer, tmp);
-    size_t header_len = strlen(buffer);
-
+    
     if (file != NULL) {
-        fread(buffer + header_len, 1, file_size, file);
-        buffer[header_len + file_size] = '\0';
+        fread(buffer, 1, file_size, file);
+        buffer[file_size] = '\0';
         fclose(file);
     } else {
         printf("failed to fseek %s\n", filename);
-        exit(EXIT_FAILURE); // TODO ERROR 500
+        return http_response(500, "text/plain", "An error has occurred.");
     }
     return buffer;
 }
