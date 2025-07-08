@@ -25,7 +25,6 @@ void url_decode(char* str) {
 test_form* parse_form(char* body) {
     printf("BODY == '%s'\n", body);
     
-    // Make a copy of body since strtok modifies the string
     char* body_copy = strdup(body);
     if (!body_copy) {
         return NULL;
@@ -37,7 +36,6 @@ test_form* parse_form(char* body) {
         return NULL;
     }
     
-    // Initialize form fields
     form->name = NULL;
     form->email = NULL;
     form->message = NULL;
@@ -53,10 +51,8 @@ test_form* parse_form(char* body) {
             char* key = token;
             char* value = equals + 1;
             
-            // URL decode the value
             url_decode(value);
             
-            // Assign to appropriate field
             if (strcmp(key, "name") == 0) {
                 form->name = strdup(value);
             } else if (strcmp(key, "email") == 0) {
